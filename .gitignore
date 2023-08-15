@@ -1,2 +1,5 @@
 thirdparty/*
 /cmake-build-debug/
+build/*
+.idea/*
+.vscode/*
