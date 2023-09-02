@@ -3,8 +3,7 @@ project(poly)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CAFFE2_USE_CUDNN 1)
-set(LD_PRELOAD=$(clang -print-file-name=libclang_rt.asan-x86_64.so))
+# set(CAFFE2_USE_CUDNN 1)
 set(Torch_DIR thirdparty/libtorch/share/cmake/Torch)
 find_package(Torch REQUIRED)
 
@@ -15,6 +14,5 @@ file(GLOB_RECURSE SRC_FILES models/*.cpp models/*.h)
 add_compile_options(-fsanitize=address,undefined -Wall -Wextra)
 add_link_options(-fsanitize=address,undefined)
 
-# add_compile_options(-Ofast)
 add_executable(poly main.cpp ${SRC_FILES})
-target_link_libraries(poly "${TORCH_LIBRARIES}" ${CMAKE_SOURCE_DIR}/thirdparty/libtorch/lib/libnvfuser_codegen.so)
+target_link_libraries(poly "${TORCH_LIBRARIES}")

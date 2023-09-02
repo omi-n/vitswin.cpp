@@ -27,10 +27,9 @@ ScaledDotProductAttention::ScaledDotProductAttention(int dim) {
   this->sqrt_dim = std::sqrt(static_cast<float>(dim));
 }
 
-torch::Tensor
-ScaledDotProductAttention::forward(torch::Tensor query, torch::Tensor key,
-                                   torch::Tensor value,
-                                   torch::optional<torch::Tensor> mask) {
+torch::Tensor ScaledDotProductAttention::forward(
+    torch::Tensor query, torch::Tensor key, torch::Tensor value,
+    torch::optional<torch::Tensor> mask) {
   auto score = torch::bmm(query, key.transpose(1, 2)) / sqrt_dim;
 
   if (mask) {
@@ -92,19 +91,17 @@ torch::Tensor MultiHeadAttention::forward(torch::Tensor query,
   return context;
 }
 
-// SelfAttention::SelfAttention(int d_model, int num_heads) {
-//   multi_head = register_module(
-//       "multi_head",
-//       torch::nn::ModuleHolder<MultiHeadAttention>(
-//           std::make_shared<MultiHeadAttention>(d_model, num_heads)));
-// }
+SelfAttention::SelfAttention(int d_model, int num_heads) {
+  this->multi_head = torch::nn::ModuleHolder<MultiHeadAttention>(
+      std::make_shared<MultiHeadAttention>(d_model, num_heads));
+}
 
-// torch::Tensor SelfAttention::forward(torch::Tensor x,
-//                                      torch::optional<torch::Tensor> mask) {
-//   if (mask)
-//     return multi_head->forward(x, x, x, mask.value());
-//   else
-//     return multi_head->forward(x, x, x);
-// }
+torch::Tensor SelfAttention::forward(torch::Tensor x,
+                                     torch::optional<torch::Tensor> mask) {
+  if (mask)
+    return this->multi_head->forward(x, x, x, mask.value());
+  else
+    return this->multi_head->forward(x, x, x);
+}
 
-} // namespace nomi
+}  // namespace nomi

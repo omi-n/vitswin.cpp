@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cmake . -B build/ -DCAFFE2_USE_CUDNN=1
+cmake . -B build/
 cd build/
 make -j16
 ./CMakeFiles/poly.dir/main.cpp.o
